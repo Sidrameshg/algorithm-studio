@@ -1,7 +1,7 @@
 """Ad-hoc validator: 40/40 ML judge test cases."""
 import sys, math
-
-sys.path.insert(0, "c:/Users/DHEERAJ/Desktop/project/backend")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from app.algorithms import (
     KNN_TESTS, KMEANS_TESTS, LINEAR_REGRESSION_TESTS, PERCEPTRON_TESTS,
 )

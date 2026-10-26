@@ -14,6 +14,7 @@ const CATEGORIES: { value: Category | 'all'; label: string }[] = [
   { value: 'searching', label: 'Searching' },
   { value: 'graph', label: 'Graph' },
   { value: 'data-structure', label: 'Data structures' },
+  { value: 'ml', label: 'Machine learning' },
 ];
 
 const DIFFICULTY_STYLE: Record<Difficulty, string> = {
@@ -67,7 +68,7 @@ export function CatalogPage() {
             <p className="mt-2 text-sm text-ink-muted line-clamp-3">{a.summary}</p>
             <div className="mt-3 flex items-center gap-2 text-[11px]">
               <span className="rounded-full border border-surface-3 bg-surface-2 px-2 py-0.5 capitalize text-ink-muted">
-                {a.category.replace('-', ' ')}
+                {a.category === 'ml' ? 'Machine learning' : a.category.replace('-', ' ')}
               </span>
               <span className={`rounded-full border px-2 py-0.5 capitalize ${DIFFICULTY_STYLE[a.difficulty]}`}>
                 {a.difficulty}

@@ -7,6 +7,7 @@ from app.config import Settings
 
 def make_settings(**overrides) -> Settings:
     s = Settings()
+    s.jwt_secret = "dev-secret-change-me-0123456789abcdef"
     for k, v in overrides.items():
         setattr(s, k, v)
     return s
