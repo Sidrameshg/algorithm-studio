@@ -6,8 +6,13 @@ describe('pageTitle', () => {
     expect(pageTitle('/algorithms/bubble-sort')).toBe('Bubble Sort · Algorithm Studio');
   });
 
+  it('names the lesson on its page', () => {
+    expect(pageTitle('/learn/selection-sort')).toBe('Selection Sort · Algorithm Studio');
+  });
+
   it('says when an algorithm does not exist', () => {
     expect(pageTitle('/algorithms/nope')).toBe('Algorithm not found · Algorithm Studio');
+    expect(pageTitle('/learn/nope')).toBe('Lesson not found · Algorithm Studio');
   });
 
   it('titles the other pages', () => {

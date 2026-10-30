@@ -13,12 +13,24 @@ const AlgorithmPage = lazy(() =>
   import('./app/AlgorithmPage').then((m) => ({ default: m.AlgorithmPage })),
 )
 
+const LabPage = lazy(() =>
+  import('./app/LabPage').then((m) => ({ default: m.LabPage })),
+)
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<CatalogPage />} />
+          <Route
+            path="/learn/:id"
+            element={
+              <Suspense fallback={<div className="p-8 text-sm text-ink-muted">Loading lesson…</div>}>
+                <LabPage />
+              </Suspense>
+            }
+          />
           <Route
             path="/algorithms/:id"
             element={

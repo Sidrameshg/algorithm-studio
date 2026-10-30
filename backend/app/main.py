@@ -17,7 +17,7 @@ from sqlalchemy import inspect, text
 from . import ai
 from .config import settings
 from .db import Base, engine
-from .routers import auth, progress, submissions, tutor
+from .routers import auth, learning, progress, submissions, tutor
 from .security import check_csrf
 
 
@@ -88,6 +88,7 @@ api = APIRouter(prefix="/api")
 api.include_router(auth.router)
 api.include_router(submissions.router)
 api.include_router(progress.router)
+api.include_router(learning.router)
 api.include_router(tutor.router)
 app.include_router(api)
 

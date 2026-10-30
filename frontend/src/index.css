@@ -60,3 +60,208 @@ input[type="range"].timeline::-moz-range-thumb {
   background: var(--color-accent);
   border: 2px solid var(--color-surface-0);
 }
+
+
+/* Studio Workbench layout */
+.studio-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(360px, 1fr);
+  gap: 14px;
+  max-width: 1920px;
+  height: 100%;
+  margin: auto;
+  padding: 14px;
+  overflow: hidden;
+}
+.studio-visual-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  min-height: 0;
+}
+.studio-heading {
+  flex-shrink: 0;
+}
+.studio-input-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-surface-3);
+  background: var(--color-surface-1);
+  border-radius: 12px;
+}
+.studio-input-bar button, .studio-playback button, .speed-button {
+  background: var(--color-surface-2);
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 12px;
+  color: var(--color-ink);
+  transition: background-color 0.15s;
+}
+.studio-input-bar button:hover, .studio-playback button:hover, .speed-button:hover {
+  background: var(--color-surface-3);
+}
+.studio-playback button:disabled, .speed-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.studio-playback button[aria-pressed=true], .speed-button[aria-pressed=true] {
+  background: var(--color-accent);
+  color: var(--color-surface-0);
+}
+.studio-visual-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--color-surface-3);
+  background: var(--color-surface-1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.studio-view-switch {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: var(--color-surface-0);
+}
+.studio-view-switch button {
+  padding: 5px 10px;
+  font-size: 11px;
+  color: var(--color-ink-muted);
+  border-radius: 5px;
+  transition: all 0.15s;
+}
+.studio-view-switch button[aria-pressed=true] {
+  color: var(--color-accent);
+  background: var(--color-surface-2);
+}
+.studio-narration {
+  flex-shrink: 0;
+  max-height: 90px;
+  padding: 10px 14px;
+  font-size: 12px;
+  background: var(--color-surface-0);
+  border-top: 1px solid var(--color-surface-3);
+  overflow: auto;
+}
+.studio-playback {
+  flex-shrink: 0;
+  padding: 12px;
+  border: 1px solid var(--color-surface-3);
+  background: var(--color-surface-1);
+  border-radius: 12px;
+}
+.studio-learning {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--color-surface-3);
+  background: var(--color-surface-1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.studio-tabs {
+  display: flex;
+  gap: 3px;
+  padding: 9px;
+  border-bottom: 1px solid var(--color-surface-3);
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.studio-tabs button {
+  flex-shrink: 0;
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--color-ink-muted);
+  border-radius: 7px;
+  transition: all 0.15s;
+}
+.studio-tabs button.selected, .studio-tabs button[aria-selected=true] {
+  color: var(--color-ink);
+  background: var(--color-surface-3);
+  font-weight: 500;
+}
+.studio-panel-content {
+  flex: 1;
+  min-height: 0;
+  padding: 12px;
+  overflow: auto;
+}
+.studio-editor-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+.studio-code-editor {
+  flex: 1;
+  width: 100%;
+  min-height: 150px;
+  padding: 12px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  background: #10131a;
+  border: 1px solid var(--color-surface-3);
+  border-radius: 8px;
+  resize: none;
+  tab-size: 4;
+}
+.studio-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+}
+.studio-dialog {
+  width: min(680px, 100%);
+  max-height: 85dvh;
+  padding: 24px;
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-surface-3);
+  border-radius: 14px;
+  overflow: auto;
+}
+.complexity-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.complexity-cards > div {
+  padding: 16px;
+  background: var(--color-surface-2);
+  border-radius: 8px;
+}
+.complexity-cards span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: var(--color-ink-muted);
+}
+.complexity-cards strong {
+  font-size: 15px;
+}
+@media (max-width: 1000px) {
+  .studio-workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+  .studio-visual-area, .studio-original-canvas {
+    min-height: 400px;
+  }
+  .studio-learning {
+    height: 650px;
+    min-height: 550px;
+  }
+}

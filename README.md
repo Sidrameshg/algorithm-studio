@@ -2,7 +2,7 @@
 
 A full-stack algorithm learning platform where every algorithm is visualized in interactive 3D. Students watch each comparison, swap, and graph traversal step-by-step, edit starter code in a Monaco editor, submit solutions for backend judging, and chat with a built-in Anthropic AI tutor for hints and explanations. The core contract is a semantic event stream: each algorithm is a pure generator that yields `AlgorithmEvent`s consumed by the 3D visualizer, synced code highlighter, playback engine, counter dashboard, and tutor context window.
 
-**Catalog today (9):** Bubble Sort, Insertion Sort, Merge Sort, Quick Sort, Binary Search, BFS, DFS, Dijkstra's Shortest Path, Binary Search Tree.
+**Catalog today (100 algorithms across 14 topics):** DSA Arrays, Sorting, Searching, Graphs, Trees, Heaps, Dynamic Programming, Greedy Algorithms, Recursion & Backtracking, Linked Lists, Stacks & Queues, Strings & Tries, Hashing, Machine Learning, and Operating Systems.
 
 ---
 

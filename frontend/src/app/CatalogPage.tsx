@@ -1,85 +1,155 @@
-/**
- * CatalogPage — algorithm cards from the registry, filterable by
- * category and difficulty. Everything works in guest mode.
- */
-
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ALGORITHMS } from '../engine/registry';
-import type { Category, Difficulty } from '../engine/definition';
+import { TOPICS } from '../engine/lessons/topics';
+import { LESSONS } from '../engine/lessons/lessons';
 
-const CATEGORIES: { value: Category | 'all'; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'sorting', label: 'Sorting' },
-  { value: 'searching', label: 'Searching' },
-  { value: 'graph', label: 'Graph' },
-  { value: 'data-structure', label: 'Data structures' },
-  { value: 'ml', label: 'Machine learning' },
+const mapCategoryToTopic = (category: string) =>
+  ({
+    sorting: 'arrays',
+    searching: 'arrays',
+    graph: 'graphs',
+    'data-structure': 'trees',
+    ml: 'ml',
+  }[category] ?? 'arrays');
+
+export interface CatalogItem {
+  id: string;
+  name: string;
+  summary: string;
+  topic: string;
+  cost: string;
+  href: string;
+  type: string;
+}
+
+export const ALL_CATALOG_ITEMS: CatalogItem[] = [
+  ...ALGORITHMS.map((a) => ({
+    id: a.id,
+    name: a.name,
+    summary: a.summary,
+    topic: mapCategoryToTopic(a.category),
+    cost: a.bigO,
+    href: `/algorithms/${a.id}`,
+    type: '3D | C++ / Java / Python | Practice | AI Tutor',
+  })),
+  ...LESSONS.map((l) => ({
+    id: l.id,
+    name: l.name,
+    summary: l.summary,
+    topic: l.topic,
+    cost: l.time,
+    href: `/learn/${l.id}`,
+    type: '3D | C++ / Java / Python | Practice | AI Tutor',
+  })),
 ];
 
-const DIFFICULTY_STYLE: Record<Difficulty, string> = {
-  easy: 'text-ok border-ok/40 bg-ok/10',
-  medium: 'text-warn border-warn/40 bg-warn/10',
-  hard: 'text-danger border-danger/40 bg-danger/10',
-};
-
 export function CatalogPage() {
-  const [category, setCategory] = useState<Category | 'all'>('all');
+  const [params, setParams] = useSearchParams();
+  const activeTopicId = params.get('topic');
+  const activeTopic = TOPICS.find((t) => t.id === activeTopicId);
 
-  const shown = useMemo(
-    () => (category === 'all' ? ALGORITHMS : ALGORITHMS.filter((a) => a.category === category)),
-    [category],
-  );
+  const [query, setQuery] = useState('');
+
+  const matchingItems = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return ALL_CATALOG_ITEMS;
+    return ALL_CATALOG_ITEMS.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.summary.toLowerCase().includes(q) ||
+        item.topic.toLowerCase().includes(q),
+    );
+  }, [query]);
+
+  const topicItems = useMemo(() => {
+    if (!activeTopic) return matchingItems;
+    return matchingItems.filter((item) => item.topic === activeTopic.id);
+  }, [activeTopic, matchingItems]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-2xl font-semibold tracking-tight">Algorithms</h1>
-      <p className="mt-1 text-sm text-ink-muted">
-        Pick an algorithm to watch it run in 3D, read reference solutions, and practice.
+      <p className="text-xs uppercase tracking-widest text-accent font-medium">
+        Algorithm Studio · CS learning library
+      </p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+        {activeTopic?.name ?? 'Choose a topic. Explore the ideas inside.'}
+      </h1>
+      <p className="mt-3 max-w-3xl text-sm text-ink-muted">
+        {activeTopic?.description ??
+          `${ALL_CATALOG_ITEMS.length} algorithms and techniques across ${TOPICS.length} topics. Open a topic for its lessons, editable examples, and step-by-step explanations.`}
       </p>
 
-      <div className="mt-5 flex flex-wrap gap-2">
-        {CATEGORIES.map((c) => (
+      <div className="my-6 flex flex-wrap items-center gap-3">
+        {activeTopic && (
           <button
-            key={c.value}
-            onClick={() => setCategory(c.value)}
-            className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-              category === c.value
-                ? 'bg-accent text-surface-0 font-medium'
-                : 'bg-surface-1 text-ink-muted hover:bg-surface-2 hover:text-ink'
-            }`}
+            onClick={() => setParams({})}
+            className="rounded-md border border-surface-3 bg-surface-1 px-4 py-2 text-sm text-ink transition-colors hover:border-accent hover:bg-surface-2"
           >
-            {c.label}
+            ← All topics
           </button>
-        ))}
+        )}
+        <label className="flex flex-1 items-center gap-3 text-sm">
+          Search
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Find an algorithm…"
+            className="min-w-0 flex-1 rounded-md border border-surface-3 bg-surface-1 p-2 text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
+          />
+        </label>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {shown.map((a) => (
-          <Link
-            key={a.id}
-            to={`/algorithms/${a.id}`}
-            className="group rounded-xl border border-surface-3 bg-surface-1 p-4 transition-colors hover:border-accent/50 hover:bg-surface-2"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <h2 className="font-medium text-ink group-hover:text-accent transition-colors">{a.name}</h2>
-              <span className="font-mono text-xs text-ink-muted">{a.bigO}</span>
-            </div>
-            <p className="mt-2 text-sm text-ink-muted line-clamp-3">{a.summary}</p>
-            <div className="mt-3 flex items-center gap-2 text-[11px]">
-              <span className="rounded-full border border-surface-3 bg-surface-2 px-2 py-0.5 capitalize text-ink-muted">
-                {a.category === 'ml' ? 'Machine learning' : a.category.replace('-', ' ')}
-              </span>
-              <span className={`rounded-full border px-2 py-0.5 capitalize ${DIFFICULTY_STYLE[a.difficulty]}`}>
-                {a.difficulty}
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {activeTopic || query.trim() ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {topicItems.map((item) => (
+            <Link
+              key={item.id}
+              to={item.href}
+              className="group rounded-xl border border-surface-3 bg-surface-1 p-5 transition-colors hover:border-accent hover:bg-surface-2"
+            >
+              <p className="text-xs text-accent font-medium">{item.type}</p>
+              <h2 className="mt-2 font-semibold text-ink group-hover:text-accent transition-colors">
+                {item.name}
+              </h2>
+              <p className="mt-2 text-sm text-ink-muted line-clamp-3">{item.summary}</p>
+              <p className="mt-3 font-mono text-xs text-ink-muted">{item.cost}</p>
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {TOPICS.map((topic) => {
+            const topicAlgos = ALL_CATALOG_ITEMS.filter((item) => item.topic === topic.id);
+            const count = topicAlgos.length;
+            if (!count) return null;
+            return (
+              <button
+                key={topic.id}
+                onClick={() => setParams({ topic: topic.id })}
+                className="group rounded-xl border border-surface-3 bg-surface-1 p-5 text-left transition-colors hover:border-accent hover:bg-surface-2"
+              >
+                <span className="text-xs text-accent font-medium">{count} lessons →</span>
+                <h2 className="mt-2 text-lg font-semibold text-ink group-hover:text-accent transition-colors">
+                  {topic.name}
+                </h2>
+                <p className="mt-2 text-sm text-ink-muted">{topic.description}</p>
+                <p className="mt-4 text-xs text-ink-muted">
+                  {topicAlgos
+                    .slice(0, 3)
+                    .map((a) => a.name)
+                    .join(' · ')}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
-      {shown.length === 0 && (
-        <p className="mt-10 text-center text-sm text-ink-muted">No algorithms in this category yet.</p>
+      {(activeTopic ? topicItems.length === 0 : matchingItems.length === 0) && (
+        <p role="status" className="py-8 text-center text-sm text-ink-muted">
+          No matching lessons. Try another search.
+        </p>
       )}
     </div>
   );
